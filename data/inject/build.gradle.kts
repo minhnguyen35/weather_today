@@ -16,8 +16,7 @@ android {
 dependencies {
     implementation(projects.base)
     implementation(libs.hilt.library)
-
-    api(projects.data.forecastbycity)
+    api(projects.data.forecasts)
     api(projects.data.db)
     
     kapt(libs.hilt.compiler)

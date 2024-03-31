@@ -2,6 +2,7 @@ package com.example.dbroom.daos
 
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Transaction
 import androidx.room.Update
 import com.example.db.daos.EntityDao
@@ -14,7 +15,7 @@ interface RoomEntityDao<in E: WeatherEntity>: EntityDao<E> {
     @Insert
     override suspend fun insertAll(vararg entity: E)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     override suspend fun insertAll(entities: List<E>)
 
     @Update

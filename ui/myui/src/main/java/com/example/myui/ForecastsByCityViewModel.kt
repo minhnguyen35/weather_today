@@ -2,7 +2,7 @@ package com.example.myui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherforecast.ForecastsByCityRepository
+import com.minhnguyen.forecasts.ForecastsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ForecastsByCityViewModel @Inject constructor(
-    private val forecastRepo: ForecastsByCityRepository
+    private val forecastRepo: ForecastsRepository
 ) : ViewModel(){
 
     init {
@@ -22,7 +22,15 @@ class ForecastsByCityViewModel @Inject constructor(
 
     private fun getForecastsByCity() {
         viewModelScope.launch (Dispatchers.IO){
-            forecastRepo.getForecastsByCity("San Francisco")
+            forecastRepo.getForecastsByCity("Ho Chi Minh").collect{
+                it.forEach {forecast->
+                    println("forecast = ${forecast.forecastTime} + ${forecast.description}")
+                }
+            }
         }
+    }
+
+    fun getForecasts() {
+        getForecastsByCity()
     }
 }

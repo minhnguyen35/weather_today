@@ -1,7 +1,8 @@
 package com.example.db.daos
 
 import com.example.models.WeatherForecast
+import kotlinx.coroutines.flow.Flow
 
 abstract class ForecastDao: EntityDao<WeatherForecast> {
-    abstract suspend fun forecastWithCityName(city: String): List<WeatherForecast>
+    abstract fun forecastWithCityName(city: String): Flow<List<WeatherForecast>>
 }

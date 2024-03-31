@@ -21,6 +21,8 @@ data class WeatherForecast(
     val minTemperature: Double,
     @ColumnInfo(name="feels_like_temperature")
     val feelsLikeTemperature: Double,
+    @ColumnInfo(name="forecast_time")
+    val forecastTime: String
 ): WeatherEntity{
 
 }

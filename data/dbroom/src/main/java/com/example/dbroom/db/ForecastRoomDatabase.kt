@@ -10,7 +10,8 @@ import com.example.models.WeatherForecast
     entities = [
         WeatherForecast::class
     ],
-    version = 1
+    version = 2,
+    exportSchema = false
 )
 abstract class ForecastRoomDatabase : ForecastDatabase, RoomDatabase(){
     abstract override fun forecastByCityDao(): RoomForecastDao

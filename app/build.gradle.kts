@@ -22,12 +22,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        val properties = gradleLocalProperties(rootDir)
-//        buildConfigField("String", "API_KEY", "\"" + propOrDef("OPEN_WEATHER_KEY", "") + "\"")
-//        buildConfigField("String", "HOST", "\"" + propOrDef("BACK_END_URL", "") + "\"")
+//        val properties = gradleLocalProperties(rootDir)
+//        buildConfigField("Boolean", "DEBUG", "\"" + propOrDef("DEBUG", "true") + "\"")
+//        buildConfigField("String", "HOST", "\"" + properties.getProperty("BACK_END_URL", "") + "\"")
+//        buildConfigField("String", "API_KEY", "\"" + properties.getProperty("OPEN_WEATHER_KEY", "") + "\"")
 
-        buildConfigField("String", "API_KEY", properties.getProperty("API_KEY", ""))
-        buildConfigField("String", "HOST", properties.getProperty("URL", ""))
     }
 
     buildTypes {
@@ -85,13 +84,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation(projects.base)
-    implementation(projects.api.openweather)
     implementation(projects.ui.myui)
-    implementation(projects.data.inject)
     implementation(projects.data.dbroom)
-
     implementation(libs.hilt.library)
-    implementation(libs.androidx.hilt.navigationcompose)
     kapt(libs.hilt.compiler)
 }
 

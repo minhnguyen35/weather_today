@@ -5,7 +5,6 @@ plugins {
 
 dependencies {
     api(projects.base)
-    api(projects.api.openweather)
     api(projects.data.models)
     implementation(projects.data.db)
 

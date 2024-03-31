@@ -6,24 +6,14 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myui"
-
-    defaultConfig {
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+    namespace = "com.minhnguyen.ui.myui"
+    buildFeatures {
+        buildConfig = true
+        compose = true
     }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composecompiler.get()
     }
-
 }
 
 dependencies {
@@ -45,8 +35,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
+    implementation(projects.data.forecasts)
     implementation(libs.hilt.library)
     kapt(libs.hilt.compiler)
     implementation(projects.base)
-    implementation(projects.data.forecastbycity)
+    implementation(libs.androidx.hilt.navigationcompose)
 }
