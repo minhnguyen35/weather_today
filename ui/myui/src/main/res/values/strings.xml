@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_icon">Home Icon</string>
+    <string name="setting_icon">Setting Icon</string>
+    <string name="cloudy_weather">Cloudy Weather</string>
+    <string name="today">Today</string>
+    <string name="five_day_forecast_section">5-Day Forecast</string>
+    <item name="list_favorites" type="string">Favorites Locations</item>
+</resources>

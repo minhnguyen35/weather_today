@@ -1,15 +1,18 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
 }
 
 android {
-    namespace = "com.minhnguyen.ui.myui"
+    namespace = "com.minhnguyen.feature.citylist"
     buildFeatures {
         buildConfig = true
         compose = true
+    }
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composecompiler.get()

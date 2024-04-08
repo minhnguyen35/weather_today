@@ -1,26 +1,18 @@
 package com.example.myui
 
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun Greeting(name: String,
-             viewModel: ForecastsByCityViewModel = hiltViewModel(),
-             modifier: Modifier = Modifier
-) {
-    val state by viewModel.state.collectAsState()
-    Text(
-        text = "Hello $state! $name",
-        modifier = modifier
-    )
-    Button(
-        onClick = {viewModel.getForecasts()}
-    ) {
-        Text(text = "get fore cast")
-    }
+fun HomeScreen() {
+    MainScreen(modifier = Modifier.fillMaxWidth().fillMaxHeight())
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeScreenPreview() {
+    HomeScreen()
 }
