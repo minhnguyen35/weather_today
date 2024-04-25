@@ -36,8 +36,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
-    implementation(projects.data.forecasts)
+    implementation(projects.domain)
     implementation(libs.hilt.library)
+    implementation(projects.data.models)
     kapt(libs.hilt.compiler)
     implementation(projects.base)
     implementation(libs.androidx.hilt.navigationcompose)

@@ -19,9 +19,3 @@ abstract class DataModule {
         cityRepository: ForecastsByCityRepository
     ): ForecastsRepository
 }
-//@InstallIn(SingletonComponent::class)
-//@Module
-//abstract class CityBinds {
-//    @Binds
-//    abstract fun bindWeatherByCityDataSource(source: DefaultForecastByCityDataSource): ForecastByCityDataSource
-//}

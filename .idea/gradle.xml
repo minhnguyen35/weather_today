@@ -20,6 +20,8 @@
             <option value="$PROJECT_DIR$/data/inject" />
             <option value="$PROJECT_DIR$/data/legacy" />
             <option value="$PROJECT_DIR$/data/models" />
+            <option value="$PROJECT_DIR$/data/syncinformation" />
+            <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/ui" />
             <option value="$PROJECT_DIR$/ui/citylist" />
             <option value="$PROJECT_DIR$/ui/myui" />

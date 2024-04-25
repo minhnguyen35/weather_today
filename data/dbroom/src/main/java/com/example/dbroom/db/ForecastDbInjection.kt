@@ -2,7 +2,10 @@ package com.example.dbroom.db
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.db.daos.ForecastDao
+import com.example.db.daos.SyncDataDao
 import com.example.db.db.DatabaseTransactionRunner
 import com.example.db.db.ForecastDatabase
 import dagger.Binds
@@ -21,7 +24,15 @@ object RoomDatabaseModule {
     fun provideDatabase(
         @ApplicationContext context: Context
     ): ForecastRoomDatabase {
-        val builder = Room.databaseBuilder(context, ForecastRoomDatabase::class.java, "forecasts.db")
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("DROP TABLE Forecast")
+            }
+        }
+
+        val builder = Room.databaseBuilder(context,
+                    ForecastRoomDatabase::class.java, "forecasts.db")
+            .addMigrations(MIGRATION_2_3)
             .fallbackToDestructiveMigration()
         return builder.build()
     }
@@ -32,6 +43,9 @@ object RoomDatabaseModule {
 object DatabaseDaoModule {
     @Provides
     fun provideForecastByCityDao(db: ForecastDatabase): ForecastDao = db.forecastByCityDao()
+
+    @Provides
+    fun provideSyncDataDao(db: ForecastDatabase): SyncDataDao = db.syncDataDao()
 }
 
 @InstallIn(SingletonComponent::class)

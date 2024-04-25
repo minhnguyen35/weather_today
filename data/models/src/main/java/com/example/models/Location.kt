@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class Location(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="id")
-    override val id: Long,
+    val id: Long,
     @ColumnInfo(name="lat")
     val lat: Double,
     @ColumnInfo(name="lon")

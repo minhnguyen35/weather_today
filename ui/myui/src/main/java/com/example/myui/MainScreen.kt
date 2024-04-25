@@ -12,14 +12,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -30,31 +34,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.models.WeatherForecast
 import com.minhnguyen.ui.myui.R
 
 @Composable
-internal fun MainScreen(modifier: Modifier = Modifier) {
+internal fun MainScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ForecastsByCityViewModel = hiltViewModel()
+) {
+    val state by viewModel.state.collectAsState()
     Box(
         modifier = modifier
-            .background(
-                Brush.verticalGradient(
-                    colorStops = colorStopsMain)
-            )
+            .background(Color.Black)
     ) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 15.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                painter = painterResource(id = R.drawable.cloudy),
-                contentDescription = stringResource(R.string.cloudy_weather)
-            )
             Spacer(Modifier.height(16.dp))
-            MainInformation()
-            ForecastByHoursView()
-            ForecastByDaysView()
+            MainInformation(state=state)
+//            ForecastByHoursView(
+//                timestamp = state.dayTimestamp,
+//                forecast = state.todayForecasts
+//            )
+            ForecastByDaysView(
+                timestamp = state.dayTimestamp,
+                forecast = state.todayForecasts
+            )
         }
     }
 
@@ -63,22 +71,24 @@ internal fun MainScreen(modifier: Modifier = Modifier) {
 @Composable
 fun ForecastByDaysView(
     modifier: Modifier = Modifier,
+    timestamp: String,
     forecast: List<WeatherForecast> = mockData
 ) {
     Box (
         modifier = modifier
-            .padding(start = 15.dp, end = 15.dp, top = 5.dp)
+            .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 20.dp)
             .wrapContentHeight()
             .background(
                 Brush.horizontalGradient(
                     colorStops = colorStops
-                )
+                ),
+                shape = RoundedCornerShape(8.dp)
             )
     ) {
         Column(
             modifier = modifier
         ) {
-            Text(text = stringResource(id = R.string.five_day_forecast_section),
+            Text(text = timestamp,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = modifier.padding(start = 10.dp, top = 5.dp)
@@ -101,29 +111,46 @@ fun ForecastDayItem(
     modifier: Modifier = Modifier,
     forecast: WeatherForecast
 ) {
-    Row(modifier = modifier){
-        Text(
-            text = "Today",
-            color = Color.White,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = modifier.weight(0.5f)
-        )
+    Row(modifier = modifier.padding(bottom = 5.dp)){
+        Column(modifier = modifier
+            .wrapContentHeight()
+            .wrapContentWidth(Alignment.Start)
+            .weight(0.3f)
+        ) {
+            Text(
+                text = forecast.forecastTime.split(' ')[1],
+                color = Color.White,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            Text(
+                text = forecast.forecastTime.split(' ')[0],
+                color = Color.White,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
+
         Image(painter = painterResource(
             id = R.drawable.night_cloudy),
             contentDescription = "Icon for current weather",
-            modifier = modifier.padding(start = 10.dp).weight(0.5f),
+            modifier = modifier
+                .padding(start = 10.dp)
+                .weight(0.2f),
         )
         Text(
-            text = "${forecast.minTemperature}°C",
+            text = "${forecast.minTemperature}°F",
             color = Color.White,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = modifier.padding(start = 10.dp).weight(0.3f)
+            modifier = modifier
+                .padding(start = 10.dp)
+//                .weight(0.4f)
         )
         Text(
-            text = "${forecast.maxTemperature}°C",
+            text = "${forecast.maxTemperature}°F",
             color = Color.White,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = modifier.padding(start = 10.dp).weight(0.3f),
+            modifier = modifier
+                .padding(start = 10.dp)
+//                .weight(0.4f),
         )
     }
 }
@@ -131,6 +158,7 @@ fun ForecastDayItem(
 @Composable
 fun ForecastByHoursView(
     modifier: Modifier = Modifier,
+    timestamp: String,
     forecast: List<WeatherForecast> = mockData) {
     Box (
         modifier = modifier
@@ -139,12 +167,13 @@ fun ForecastByHoursView(
             .background(
                 Brush.horizontalGradient(
                     colorStops = colorStops
-                )
+                ),
+                shape = RoundedCornerShape(8.dp)
             )
     ){
         Column(modifier = modifier.wrapContentHeight()){
             Row {
-                Text(text = "April, 01",
+                Text(text = timestamp,
                     color = Color.White,
                     modifier = modifier.padding(start = 10.dp, top = 3.dp)
                     )
@@ -183,7 +212,7 @@ fun ForecastHourItem(modifier: Modifier = Modifier,
         Image(painter = painterResource(id = R.drawable.weather_ic),
             contentDescription = "something")
         Spacer(modifier = modifier.height(5.dp))
-        Text(text = forecast.forecastTime,
+        Text(text = "something",
              color = Color.White,
              style = MaterialTheme.typography.bodyLarge
         )
@@ -191,35 +220,35 @@ fun ForecastHourItem(modifier: Modifier = Modifier,
 }
 
 @Composable
-fun MainInformation(modifier: Modifier = Modifier) {
+fun MainInformation(modifier: Modifier = Modifier, state: HomeScreenState) {
     Column (
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally){
-        Text(text = "Ho Chi Minh City",
+        Text(text = state.cityName,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = Color.White,)
-        Text(text = "19°C",
+        Text(text = state.avgTemperature,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = Color.White,
             )
         Text(
             textAlign = TextAlign.Center,
-            text = "Description Description Description Description Description",
+            text = state.descriptionForecast,
             style = MaterialTheme.typography.headlineSmall,
             color = Color.White,
             modifier = modifier.padding(start=5.dp, end = 5.dp)
             )
         Spacer(Modifier.height(10.dp))
         Row {
-            Text(text = "Max: 23",
+            Text(text = "Max: ${state.maxTemperature}",
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.White,
             )
             Spacer(Modifier.width(30.dp))
             Text(
-                text = "Min: 17",
+                text = "Min: ${state.minTemperature}",
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.White
             )
@@ -236,12 +265,12 @@ fun PreviewMainScreen(){
 @Preview(showBackground = true)
 @Composable
 fun PreviewCardView() {
-    ForecastByHoursView(forecast = mockData)
+    ForecastByDaysView(timestamp = "Preview Test",forecast = mockData)
 }
 
 @Preview(showBackground = true, backgroundColor = 4287925128L)
 @Composable
 fun TestElement() {
-    ForecastDayItem(forecast = WeatherForecast(1,"San francisco","18oC", 30.0, 23.0, 27.0, "112233"))
+    ForecastDayItem(forecast = WeatherForecast("San francisco","18oC", 300.0, 230.0, 27.0, "112233 15:00", 12345L))
 }
 

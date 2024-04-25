@@ -5,4 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 abstract class ForecastDao: EntityDao<WeatherForecast> {
     abstract fun forecastWithCityName(city: String): Flow<List<WeatherForecast>>
+
+    abstract fun forecastCityWithTimestamp(city: String, timestamp: Long): Flow<List<WeatherForecast>>
 }
