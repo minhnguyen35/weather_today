@@ -51,7 +51,7 @@ internal fun CityListRoute(
         modifier = Modifier.background(Color.Black)
     ) {
         Column(modifier) {
-            Row(modifier.padding(top = 10.dp, start = 5.dp, end = 5.dp)) {
+            Row(modifier.padding(top = 10.dp, start = 5.dp, end = 5.dp).background(Color.Red)) {
                 TextField(
                     value = "",
                     onValueChange = {},

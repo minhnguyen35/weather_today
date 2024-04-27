@@ -88,6 +88,7 @@ dependencies {
     implementation(projects.ui.myui)
     implementation(projects.ui.citylist)
     implementation(projects.ui.settings)
+    implementation(projects.ui.search)
     implementation(projects.data.dbroom)
     implementation(libs.hilt.library)
     kapt(libs.hilt.compiler)

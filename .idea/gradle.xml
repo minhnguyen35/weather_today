@@ -25,6 +25,7 @@
             <option value="$PROJECT_DIR$/ui" />
             <option value="$PROJECT_DIR$/ui/citylist" />
             <option value="$PROJECT_DIR$/ui/myui" />
+            <option value="$PROJECT_DIR$/ui/search" />
             <option value="$PROJECT_DIR$/ui/settings" />
           </set>
         </option>

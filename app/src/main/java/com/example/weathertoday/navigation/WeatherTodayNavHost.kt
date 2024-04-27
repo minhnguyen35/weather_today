@@ -10,6 +10,7 @@ import com.example.myui.navigation.HOME_ROUTE
 import com.example.myui.navigation.homeScreen
 import com.minhnguyen.feature.citylist.navigation.favoriteCityScreen
 import com.minhnguyen.feature.settings.navigation.settingsScreen
+import com.minhnguyen.search.navigation.searchScreen
 
 @Composable
 fun WeatherTodayNavHost(
@@ -25,5 +26,6 @@ fun WeatherTodayNavHost(
         homeScreen()
         favoriteCityScreen()
         settingsScreen()
+        searchScreen()
     }
 }
