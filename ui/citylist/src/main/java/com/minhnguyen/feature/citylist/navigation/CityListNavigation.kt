@@ -10,8 +10,8 @@ const val CITY_LIST_ROUTE = "city_list_route"
 
 fun NavController.navigateToCityList(navOptions: NavOptions) = navigate(CITY_LIST_ROUTE, navOptions)
 
-fun NavGraphBuilder.favoriteCityScreen() {
+fun NavGraphBuilder.favoriteCityScreen(navigateToSearch: ()->Unit) {
     composable(route = CITY_LIST_ROUTE) {
-        CityListRoute()
+        CityListRoute(navigateToSearch = navigateToSearch)
     }
 }

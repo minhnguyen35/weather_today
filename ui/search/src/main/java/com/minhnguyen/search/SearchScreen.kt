@@ -11,9 +11,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,25 +35,37 @@ private val mockData = listOf(
     "Beijing"
 )
 @Composable
-fun SearchRoute(modifier: Modifier = Modifier) {
+fun SearchRoute(
+    modifier: Modifier = Modifier,
+    navigateToListCity: () -> Unit
+) {
+    println("nhbm SearchRoute")
     Column(modifier) {
-        SearchBar(modifier)
+        SearchBar(modifier, navigateToListCity)
         SearchSuggestion(modifier, mockData)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SearchBar(modifier: Modifier = Modifier) {
+internal fun SearchBar(
+    modifier: Modifier = Modifier,
+    navigateToListCity: () -> Unit
+    ) {
     Row {
         TextField(
             value = "",
             onValueChange = {},
             leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null
-                )
+                IconButton(onClick = {
+                    println("nhbm on back click")
+                    navigateToListCity()
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = null
+                    )
+                }
             },
             colors = TextFieldDefaults.textFieldColors(
                 placeholderColor = Color(0xff7fb2f5)
@@ -84,7 +98,7 @@ internal fun SearchSuggestion(
                 .background(
                     color = MaterialTheme.colorScheme.primaryContainer,
                     shape = RoundedCornerShape(3.dp)
-                    )
+                )
                 .fillMaxWidth()
         ) {
             items(suggestions){ item ->
@@ -103,5 +117,5 @@ internal fun SearchSuggestion(
 @Preview
 @Composable
 fun PreviewSearchScreen() {
-    SearchRoute()
+    SearchRoute(navigateToListCity = {})
 }
