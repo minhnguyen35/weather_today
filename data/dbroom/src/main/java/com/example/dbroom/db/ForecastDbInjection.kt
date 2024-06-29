@@ -33,6 +33,7 @@ object RoomDatabaseModule {
         val builder = Room.databaseBuilder(context,
                     ForecastRoomDatabase::class.java, "forecasts.db")
             .addMigrations(MIGRATION_2_3)
+            .addCallback(PrepopulateCitiesCallback(context))
             .fallbackToDestructiveMigration()
         return builder.build()
     }

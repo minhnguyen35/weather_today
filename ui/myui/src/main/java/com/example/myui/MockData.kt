@@ -14,7 +14,7 @@ val colorStopsMain = arrayOf(
 val mockData = listOf(
 WeatherForecast("San francisco","cloudy1",
 30.0, 300.0, 330.0,
-"April,30th 10h", 4334934L),
+"2024-06-28 22:00", 4334934L),
 WeatherForecast("San francisco","cloudy 2",
 30.0, 300.0, 330.0,
 "April,30th 12h", 4334934L),

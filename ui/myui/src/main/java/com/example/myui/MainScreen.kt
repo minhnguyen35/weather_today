@@ -1,5 +1,6 @@
 package com.example.myui
 
+import android.widget.TextClock
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.models.WeatherForecast
 import com.minhnguyen.ui.myui.R
@@ -79,9 +82,10 @@ fun ForecastByDaysView(
             .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 20.dp)
             .wrapContentHeight()
             .background(
-                Brush.horizontalGradient(
-                    colorStops = colorStops
-                ),
+//                Brush.horizontalGradient(
+//                    colorStops = colorStops
+//                ),
+                color = Color(0xff4a5463),
                 shape = RoundedCornerShape(8.dp)
             )
     ) {
@@ -90,7 +94,8 @@ fun ForecastByDaysView(
         ) {
             Text(text = timestamp,
                 color = Color.White,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
                 modifier = modifier.padding(start = 10.dp, top = 5.dp)
             )
             Divider(
@@ -118,15 +123,11 @@ fun ForecastDayItem(
             .weight(0.3f)
         ) {
             Text(
-                text = forecast.forecastTime.split(' ')[1],
+                text = forecast.forecastTime,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyLarge,
             )
-            Text(
-                text = forecast.forecastTime.split(' ')[0],
-                color = Color.White,
-                style = MaterialTheme.typography.bodyLarge,
-            )
+
         }
 
         Image(painter = painterResource(
@@ -137,20 +138,12 @@ fun ForecastDayItem(
                 .weight(0.2f),
         )
         Text(
-            text = "${forecast.minTemperature}°F",
+            text = "${forecast.feelsLikeTemperature.toInt()} °F",
             color = Color.White,
             style = MaterialTheme.typography.bodyLarge,
             modifier = modifier
                 .padding(start = 10.dp)
 //                .weight(0.4f)
-        )
-        Text(
-            text = "${forecast.maxTemperature}°F",
-            color = Color.White,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = modifier
-                .padding(start = 10.dp)
-//                .weight(0.4f),
         )
     }
 }
@@ -165,9 +158,7 @@ fun ForecastByHoursView(
             .padding(15.dp)
             .wrapContentHeight()
             .background(
-                Brush.horizontalGradient(
-                    colorStops = colorStops
-                ),
+                color = Color(0xff4a5463),
                 shape = RoundedCornerShape(8.dp)
             )
     ){
@@ -200,7 +191,8 @@ fun ForecastHourItem(modifier: Modifier = Modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .width(100.dp)
+            .width(150.dp)
+            .height(100.dp)
             .padding(5.dp)
     ){
         Text(
@@ -212,7 +204,7 @@ fun ForecastHourItem(modifier: Modifier = Modifier,
         Image(painter = painterResource(id = R.drawable.weather_ic),
             contentDescription = "something")
         Spacer(modifier = modifier.height(5.dp))
-        Text(text = "something",
+        Text(text = forecast.forecastTime,
              color = Color.White,
              style = MaterialTheme.typography.bodyLarge
         )
@@ -228,32 +220,49 @@ fun MainInformation(modifier: Modifier = Modifier, state: HomeScreenState) {
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = Color.White,)
+        ClockView()
         Text(text = state.avgTemperature,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = Color.White,
-            )
+        )
         Text(
             textAlign = TextAlign.Center,
             text = state.descriptionForecast,
-            style = MaterialTheme.typography.headlineSmall,
+            style = MaterialTheme.typography.bodyLarge,
             color = Color.White,
             modifier = modifier.padding(start=5.dp, end = 5.dp)
             )
-        Spacer(Modifier.height(10.dp))
-        Row {
-            Text(text = "Max: ${state.maxTemperature}",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color.White,
-            )
-            Spacer(Modifier.width(30.dp))
-            Text(
-                text = "Min: ${state.minTemperature}",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color.White
-            )
-        }
+//        Row {
+//            Text(text = "Max: ${state.maxTemperature}",
+//                style = MaterialTheme.typography.headlineSmall,
+//                color = Color.White,
+//            )
+//            Spacer(Modifier.width(30.dp))
+//            Text(
+//                text = "Min: ${state.minTemperature}",
+//                style = MaterialTheme.typography.headlineSmall,
+//                color = Color.White
+//            )
+//        }
+
     }
+}
+
+@Composable
+fun ClockView() {
+    println("nhbm clockview rendering...")
+    AndroidView(factory = {context ->
+        TextClock(context).apply {
+            // on below line we are setting 12 hour format.
+            format12Hour?.let { this.format12Hour = "hh:mm:ss a" }
+            // on below line we are setting time zone.
+            timeZone?.let { this.timeZone = it }
+            // on below line we are setting text size.
+            textSize.let { this.textSize = 30f }
+            setTextColor(ContextCompat.getColor(context, com.google.android.material.R.color.m3_ref_palette_white))
+        }
+    })
 }
 
 @Preview(showBackground = true, widthDp = 500)
@@ -265,12 +274,12 @@ fun PreviewMainScreen(){
 @Preview(showBackground = true)
 @Composable
 fun PreviewCardView() {
-    ForecastByDaysView(timestamp = "Preview Test",forecast = mockData)
+    ForecastByDaysView(timestamp = "2024-06-29 00:00:00",forecast = mockData)
 }
 
 @Preview(showBackground = true, backgroundColor = 4287925128L)
 @Composable
 fun TestElement() {
-    ForecastDayItem(forecast = WeatherForecast("San francisco","18oC", 300.0, 230.0, 27.0, "112233 15:00", 12345L))
+    ForecastDayItem(forecast = WeatherForecast("San francisco","18oC", 300.0, 230.0, 27.0, "2024-06-28 15:00:00", 12345L))
 }
 

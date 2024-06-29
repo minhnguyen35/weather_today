@@ -18,6 +18,7 @@ class ForecastsByCityRepository @Inject constructor(
     override suspend fun syncData(city: String): Boolean {
         println("nhbm syncData ct = $city")
         withContext(Dispatchers.IO) {
+            println("nhbm sync data")
             val forecasts = remoteDataSource.getForecast(city)
             println("nhbm remote data = $forecasts")
             forecastByCityDao.insertAll(
@@ -27,4 +28,7 @@ class ForecastsByCityRepository @Inject constructor(
         return true
     }
 
+    override suspend fun deleteOutdatedData(beforeTimestamp: Long): Int {
+        return forecastByCityDao.deleteOutdatedData(beforeTimestamp)
+    }
 }

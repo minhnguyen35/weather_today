@@ -47,7 +47,7 @@ class RetrofitOWNetwork @Inject constructor(
         .create(RetrofitOWNetworkApi::class.java)
     override suspend fun getForecastsByCityName(city: String): Network3HoursForecast {
         val res = networkApi.getForecastsByCityName(city)
-        println("minh.nguyen res = ${res.message}")
+        println("nhbm res = ${res.message}")
         return res
     }
 

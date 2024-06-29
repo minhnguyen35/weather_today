@@ -17,10 +17,6 @@ class SyncForecastData @Inject constructor(
         private const val SYNC_TIME = "sync_time"
     }
 
-    init {
-        println("mnguyen onCreate SyncForecastData")
-    }
-
     override suspend fun doWork(params: Params) {
         val syncInformation = syncInformationRepository.getAttribute(SYNC_TIME).firstOrNull()
 
@@ -29,14 +25,17 @@ class SyncForecastData @Inject constructor(
             val current: Long = System.currentTimeMillis()
             val lastSyncTime = syncInformation?.value?.toLong() ?: 0L
             val gapTime = current - lastSyncTime
-            println("nhbm gapTime = $gapTime")
-            if (gapTime >= TimeUnit.DAYS.toMillis(5)) {
-                println("nhbm sync new data")
-                syncInformationRepository.saveAttribute(
-                    attribute = SYNC_TIME,
-                    value = current
-                )
-                forecastsByCityRepository.syncData(params.city)
+            val threshold = TimeUnit.HOURS.toMillis(12)
+            println("nhbm gapTime = $gapTime threshold = $threshold")
+            if (gapTime >= threshold) {
+                val isSyncedSuccessfully = forecastsByCityRepository.syncData(params.city)
+                if(isSyncedSuccessfully) {
+                    println("nhbm sync new data")
+                    syncInformationRepository.saveAttribute(
+                        attribute = SYNC_TIME,
+                        value = current
+                    )
+                }
             }
         }
 

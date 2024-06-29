@@ -1,8 +1,11 @@
 package com.example.myui
 
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.base.InvokeError
 import com.example.models.WeatherForecast
+import com.minhnguyen.domain.interactors.DeleteOutdatedCache
 import com.minhnguyen.domain.interactors.GetForecasts5D3H
 import com.minhnguyen.domain.interactors.SyncForecastData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,12 +28,12 @@ import javax.inject.Inject
 class ForecastsByCityViewModel @Inject constructor(
     observeForecasts5D3H: GetForecasts5D3H,
     syncForecastData: SyncForecastData,
+    deleteOutdatedCache: DeleteOutdatedCache
 ) : ViewModel(){
 
     companion object {
         private const val default_city = "Ho Chi Minh"
     }
-
 
     val state : StateFlow<HomeScreenState> = observeForecasts5D3H.flow
         .map {
@@ -41,19 +44,12 @@ class ForecastsByCityViewModel @Inject constructor(
             initialValue = HomeScreenState.Empty
         )
 
-    private fun mappingState(forecasts: List<WeatherForecast>) : HomeScreenState{
-        val currentTime = System.currentTimeMillis()
-
-        val forecastsFrom = forecasts.filter {
-            it.timeStamp*1000L >= currentTime
-        }.take(10)
-
-        println("nhbm todayForecast ${forecastsFrom.map { it.forecastTime }}")
-        val pattern = "yyyy-MM-dd HH:mm"
-        val simpleDateFormat = SimpleDateFormat(pattern).format(Date(currentTime))
+    private fun mappingState(forecastsFrom: List<WeatherForecast>) : HomeScreenState{
         if(forecastsFrom.isEmpty())
             return HomeScreenState.Empty
-//        val todayTimestamp = Date()
+        val currentTime = System.currentTimeMillis()
+        val pattern = "yyyy-MM-dd HH:mm"
+        val simpleDateFormat = SimpleDateFormat(pattern).format(Date(currentTime))
         return HomeScreenState(
             cityName = default_city,
             avgTemperature = "${forecastsFrom[0].feelsLikeTemperature}°F",
@@ -64,25 +60,16 @@ class ForecastsByCityViewModel @Inject constructor(
             todayForecasts = forecastsFrom)
     }
 
-    private fun filterDateTime(data: List<WeatherForecast>, currentTime: Long): List<WeatherForecast> {
-        val currentCalendar = Calendar.getInstance(Locale("vi","VN"))
-        val year = currentCalendar.get(Calendar.YEAR)
-        val month = currentCalendar.get(Calendar.MONTH)
-        val day = currentCalendar.get(Calendar.DATE)
-        println("nhbm year = $year month = $month day = $day")
-        currentCalendar.set(year, month, day + 1, 0, 0, 0)
-        return data.filter {
-            it.timeStamp*1000L >= currentTime
-                    && it.timeStamp*1000L <= currentCalendar.time.time
-        }
-    }
-
     init {
         println("nhbm syncData init")
         viewModelScope.launch (Dispatchers.IO){
             syncForecastData(SyncForecastData.Params(default_city)).collectLatest {
                 println("nhbm status = $it")
+                if(it is InvokeError) {
+                    println("InvokeError: ${it.throwable.message}")
+                }
             }
+            deleteOutdatedCache(Unit)
             observeForecasts5D3H(GetForecasts5D3H.Params(default_city))
         }
     }
